@@ -6,16 +6,16 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.formulu.unityserverend.conn.MySQLConnPool;
+import com.formulu.unityserverend.conn.MySqlConnPool;
 import com.formulu.unityserverend.conn.StatusConnection;
 
 public class MySQLConnPoolTest {
 
-    private MySQLConnPool connPool = null;
+    private MySqlConnPool connPool = null;
     
     @Before
     public void setup(){
-        connPool = new MySQLConnPool("127.0.0.1","3306","test", "root", "root");
+        connPool = new MySqlConnPool("127.0.0.1","3306","test", "root", "root");
     }
     
     @Test

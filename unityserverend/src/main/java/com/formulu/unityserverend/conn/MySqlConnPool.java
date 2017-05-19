@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Vector;
 
-public class MySQLConnPool {
+public class MySqlConnPool implements ConnectionPool {
     private String jdbcDriver = "com.mysql.cj.jdbc.Driver";
     private String dbUrl = "";
     private String dbUser = "";
@@ -17,12 +17,13 @@ public class MySQLConnPool {
     private int maxConnSize = 50;
     private Vector<StatusConnection> connections = null;
 
-    public MySQLConnPool(String dbIP, String dbPort, String dbName, String dbUser, String dbPwd) {
+    public MySqlConnPool(String dbIP, String dbPort, String dbName, String dbUser, String dbPwd) {
         this.dbUrl = "jdbc:mysql://" + dbIP + ":" + dbPort + "/" + dbName;
         this.dbUser = dbUser;
         this.dbPwd = dbPwd;
     }
 
+    @Override
     public StatusConnection getConnection() {
         StatusConnection conn = null;
         try {
@@ -41,6 +42,7 @@ public class MySQLConnPool {
         return conn;
     }
 
+    @Override
     public boolean closeConnections() {
         connections.clear();
         return true;
