@@ -29,4 +29,8 @@ public class User {
         this.contact = contact;
     }
 
+    @Override
+    public String toString() {
+        return "======The user info======\n" + "id : " + id + "| name : " + name + "| contact : " + contact;
+    }
 }
