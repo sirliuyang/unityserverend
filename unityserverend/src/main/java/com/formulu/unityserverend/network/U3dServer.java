@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import com.formulu.unityserverend.handler.MsgHandler;
 // http://blog.csdn.net/u014735301/article/details/42145131
+import com.formulu.unityserverend.handler.SocketMsgHandler;
 
 public class U3dServer implements Runnable {
     public void run() {
@@ -40,14 +43,13 @@ public class U3dServer implements Runnable {
     }
 
     class SocketSender extends Thread {
-
         private Socket socket;
         private OutputStreamWriter writer;
 
         public SocketSender(Socket socket) {
             this.socket = socket;
         }
-
+        @Override
         public void run() {
             try {
                 writer = new OutputStreamWriter(socket.getOutputStream());
@@ -57,23 +59,20 @@ public class U3dServer implements Runnable {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
         }
     }
 
     class SocketReceiver extends Thread {
-
         /** 报文长度字节数 */
         private int messageLengthBytes = 1024;
-
         private Socket socket;
-
+        private MsgHandler<BufferedInputStream> msgHanlder;
         /** socket输入处理流 */
         private BufferedInputStream bis = null;
 
-
         public SocketReceiver(Socket socket) {
             this.socket = socket;
+            msgHanlder = new SocketMsgHandler();
         }
 
         @Override
@@ -82,20 +81,7 @@ public class U3dServer implements Runnable {
 
                 // 获取socket中的数据
                 bis = new BufferedInputStream(socket.getInputStream());
-                byte[] buf = new byte[messageLengthBytes];
-                /**
-                 * 在Socket报文传输过程中,应该明确报文的域
-                 */
-                while (true) {
-                    /*
-                     * 这种业务处理方式是根据不同的报文域,开启线程,采用不同的业务逻辑进行处理 依据业务需求而定
-                     */
-                    // 读取字节数组中的内容
-                    bis.read(buf);
-                    // 输出
-                    System.out.println(new String(buf, "utf-8"));
-
-                }
+                msgHanlder.handleMsg(bis);
             } catch (IOException e) {
                 System.err.println("读取报文出错" + e.getMessage());
             } finally {

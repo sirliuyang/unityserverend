@@ -1,11 +1,12 @@
 package com.formulu.unityserverend.service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.formulu.unityserverend.dao.UserDao;
 import com.formulu.unityserverend.entity.User;
 
-public class UserService {
+public class UserService implements Service<User>{
 
     public void add(User user) {
         StringBuilder sql = new StringBuilder();
@@ -21,5 +22,23 @@ public class UserService {
             e.printStackTrace();
         }
         return user;
+    }
+
+    @Override
+    public void remove(User t) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public User queryByName(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<User> queryAll() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
