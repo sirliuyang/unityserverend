@@ -2,7 +2,7 @@ package com.formulu.unityserverend.network;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 // http://blog.csdn.net/u014735301/article/details/42145131
@@ -12,15 +12,16 @@ public class U3dServer implements Runnable {
         ServerSocket u3dServerSocket = null;
         while (true) {
             try {
-                u3dServerSocket = new ServerSocket(8000);
-                System.out.println("U3d server started, listening to 8000");
+                u3dServerSocket = new ServerSocket(8888);
+                System.out.println("U3d server started, listening to 8888");
                 while (true) {
                     Socket socket = u3dServerSocket.accept();
                     System.out.println("Client connected");
-                    new RequestReceiver(socket).start();
+                    new SocketReceiver(socket).start();
+                    new SocketSender(socket).start();
                 }
             } catch (IOException e) {
-                System.err.println("Failed");
+                System.err.println("Failed:" + e.getMessage());
                 if (u3dServerSocket != null) {
                     try {
                         u3dServerSocket.close();
@@ -35,12 +36,32 @@ public class U3dServer implements Runnable {
             } catch (InterruptedException e) {
 
             }
-
         }
-
     }
 
-    class RequestReceiver extends Thread {
+    class SocketSender extends Thread {
+
+        private Socket socket;
+        private OutputStreamWriter writer;
+
+        public SocketSender(Socket socket) {
+            this.socket = socket;
+        }
+
+        public void run() {
+            try {
+                writer = new OutputStreamWriter(socket.getOutputStream());
+                writer.write("Server, Server, Server");
+                writer.flush();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    class SocketReceiver extends Thread {
 
         /** 报文长度字节数 */
         private int messageLengthBytes = 1024;
@@ -51,13 +72,14 @@ public class U3dServer implements Runnable {
         private BufferedInputStream bis = null;
 
 
-        public RequestReceiver(Socket socket) {
+        public SocketReceiver(Socket socket) {
             this.socket = socket;
         }
 
         @Override
         public void run() {
             try {
+
                 // 获取socket中的数据
                 bis = new BufferedInputStream(socket.getInputStream());
                 byte[] buf = new byte[messageLengthBytes];
@@ -72,13 +94,10 @@ public class U3dServer implements Runnable {
                     bis.read(buf);
                     // 输出
                     System.out.println(new String(buf, "utf-8"));
-                    OutputStream out = socket.getOutputStream();
-                    // 向客户端传输数据的字节数组
-                    out.write(new String("i am server").getBytes());
-                }
 
+                }
             } catch (IOException e) {
-                System.err.println("读取报文出错");
+                System.err.println("读取报文出错" + e.getMessage());
             } finally {
                 if (socket != null) {
                     try {
