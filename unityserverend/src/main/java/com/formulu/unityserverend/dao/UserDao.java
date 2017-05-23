@@ -15,6 +15,14 @@ public class UserDao extends MySqlDAO {
         super();
     }
 
+    public void insert(String name, String contact) throws SQLException {
+        String sql = "insert into users(name, contact) values(?,?)";
+        PreparedStatement preparedStmt = conn.prepareStatement(sql);
+        preparedStmt.setString(1, name);
+        preparedStmt.setString(2, contact);
+        preparedStmt.executeUpdate();
+    }
+
     public User selectByName(String name) throws SQLException {
         User user = new User();
         String sql = "select * from users where name = ?";

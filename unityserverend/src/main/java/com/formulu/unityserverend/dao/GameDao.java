@@ -3,19 +3,21 @@ package com.formulu.unityserverend.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.json.JSONObject;
 
 import com.formulu.unityserverend.conn.MySqlDAO;
 import com.formulu.unityserverend.entity.Game;
-import com.formulu.unityserverend.entity.User;
 
 public class GameDao extends MySqlDAO {
     public GameDao() {
         super();
     }
 
+    public void insert(String name, JSONObject step){
+        
+    }
+    
     public Game selectByName(String name) throws SQLException {
         Game game = new Game();
         String sql = "select * from games where name = ?";
@@ -26,20 +28,5 @@ public class GameDao extends MySqlDAO {
 
         }
         return game;
-    }
-
-    public List<User> selectAll() throws SQLException {
-        List<User> userList = new ArrayList<User>();
-        String sql = "select * from users";
-        Statement Stmt = conn.createStatement();
-        ResultSet rs = Stmt.executeQuery(sql);
-        while (rs.next()) {
-            User user = new User();
-            user.setId(rs.getInt(1));
-            user.setName(rs.getString(2));
-            user.setContact(rs.getString(3));
-            userList.add(user);
-        }
-        return userList;
     }
 }

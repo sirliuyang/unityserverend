@@ -2,18 +2,18 @@ package com.formulu.unityserverend.service;
 
 import java.util.List;
 
+import org.json.JSONObject;
+
 import com.formulu.unityserverend.entity.Game;
 
 public class GameService implements Service<Game> {
 
     @Override
-    public void add(Game t) {
-        // TODO Auto-generated method stub
-
+    public void add(JSONObject json) {
     }
 
     @Override
-    public void remove(Game t) {
+    public void remove(JSONObject json) {
         // TODO Auto-generated method stub
 
     }

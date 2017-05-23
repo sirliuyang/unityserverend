@@ -14,6 +14,7 @@ import com.formulu.unityserverend.util.ContentTransfer;
 
 public class SocketMsgHandler implements MsgHandler<BufferedInputStream> {
     private static final String TYPE = "datatype";
+    
 
     @Override
     public void handleMsg(BufferedInputStream msgFromClient) {
@@ -22,12 +23,12 @@ public class SocketMsgHandler implements MsgHandler<BufferedInputStream> {
         JSONArray type = (JSONArray) json.get(TYPE);
         if (type.get(0).equals("user")) {
             Service<User> service = new UserService();
-            User user = new User();
+            JSONObject user = null;
             service.add(user);
         }
         if (type.get(0).equals("game")) {
             Service<Game> service = new GameService();
-            Game game = new Game();
+            JSONObject game = null;
             service.add(game);
         }
     }
